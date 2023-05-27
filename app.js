@@ -1,5 +1,6 @@
 //jshint esversion:6
 
+require('dotenv').config(); // <----- no need any const or variable
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -7,6 +8,8 @@ const mongoose = require("mongoose");
 const mongooseFieldEncryption = require("mongoose-field-encryption").fieldEncryption;
 
 const app = express();
+
+// console.log(process.env.API_KEY);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
@@ -21,10 +24,9 @@ const userSchema = new mongoose.Schema({
   password: String
 });
 
-const secret = "Thisisourlittlesecret";
 userSchema.plugin(mongooseFieldEncryption, {
   fields: ["password"],
-  secret: secret
+  secret: process.env.SECRET
 });
 
 const User = new mongoose.model("User", userSchema);
